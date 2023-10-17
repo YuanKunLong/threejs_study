@@ -1,12 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import Stats from 'three/examples/jsm/libs/stats.module.js';
 
 function App() {
     const divRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (!divRef.current) return;
+
+        const stats = new Stats();
+        stats.setMode(1);
+        document.body.appendChild(stats.domElement);
 
         // 1. 创建场景
         const scene = new THREE.Scene();
@@ -23,7 +28,9 @@ function App() {
         // 将网格添加在场景中
         scene.add(cube);
         // 5. 创建渲染盒子
-        const renderer = new THREE.WebGLRenderer();
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true
+        });
         renderer.setSize(window.innerWidth, window.innerHeight);
         divRef.current.appendChild(renderer.domElement);
         // 6. 创建照相机
@@ -56,19 +63,19 @@ function App() {
         // scene.add(pointLightHelper);
 
         // 环境光
-        // const ambient = new THREE.AmbientLight(0xffffff, 1);
-        // scene.add(ambient);
+        const ambient = new THREE.AmbientLight(0xffffff, 1);
+        scene.add(ambient);
         // 平行光
         // const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        // directionalLight.position.set(1, 0, 0);
+        // directionalLight.position.set(1, 1, 1);
         // scene.add(directionalLight);
         // const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 1, 0xff0000);
         // scene.add(directionalLightHelper);
         // 聚光灯
-        const spotLight = new THREE.SpotLight(0x00ff00, 100);
-        scene.add(spotLight);
-        const spotLightHelper = new THREE.SpotLightHelper(spotLight, 0xffffff);
-        scene.add(spotLightHelper);
+        // const spotLight = new THREE.SpotLight(0x00ff00, 100);
+        // scene.add(spotLight);
+        // const spotLightHelper = new THREE.SpotLightHelper(spotLight, 0xffffff);
+        // scene.add(spotLightHelper);
 
         // !轨道控制
         // 设置相机控件轨道控制器OrbitControls
@@ -80,11 +87,56 @@ function App() {
             // 本质是改变相机的参数
             console.log('camera.position', camera.position);
         })
+        controls.target.set(2,0,0);
+        controls.update();
+
+        // 随机创建大量的模型,测试渲染性能
+        const geometry2 = new THREE.BoxGeometry(1, 1, 1);
+        const material2 = new THREE.MeshLambertMaterial({
+            color: 0x00ffff,
+            transparent: true,
+            opacity: 0.5
+        });
+        // 单层for循环创建一列矩阵
+        // for (let i = 0; i < 10; i++) {
+        //     const mesh = new THREE.Mesh(geometry2, material2);
+        //     mesh.position.set(i * 2, 0, 0);
+        //     scene.add(mesh);
+        // }
+
+        
+        // !高光亮度属性
+        const phongMaterial = new THREE.MeshPhongMaterial({
+            color: 0xff0000,
+            shininess: 1,
+            specular: 0x444444,
+        })
+
+        // 双层for循环创建一个阵列模型
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                const mesh = new THREE.Mesh(geometry2, material2);
+                mesh.position.set(i * 2, j * 2, j * 2);
+                scene.add(mesh);
+            }
+        }
+
+        // camera.position.set(20,20,20)
+        // camera.lookAt(10,0,10)
+
+        // !WebGl渲染器设置
+        // 初始化设备像素比（如果遇到canvas画布输出模糊的问题 注意设置
+        renderer.setPixelRatio(window.devicePixelRatio);
+        console.log(window.devicePixelRatio);
+        
+        // 设置背景颜色
+        renderer.setClearColor(0x444444, 1);
 
 
         // 简易动画
         function animate() {
-            // requestAnimationFrame(animate);
+            requestAnimationFrame(animate);
+            stats.update();
 
             cube.rotation.x += 0.01;
             cube.rotation.y += 0.01;
@@ -92,7 +144,14 @@ function App() {
         }
         animate();
 
-
+        window.onresize = function() {
+            // 重新修改画布大小
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            // 重新设置观察范围的宽高比
+            camera.aspect = window.innerWidth / window.innerHeight;
+            // camera的属性发生变化时 需调用updateProjectionMatrix方法更新相机的投影矩阵
+            camera.updateProjectionMatrix();
+        }
 
         return () => {
             if (divRef.current) {
