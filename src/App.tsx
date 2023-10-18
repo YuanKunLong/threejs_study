@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import Stats from 'three/examples/jsm/libs/stats.module.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 function App() {
     const divRef = useRef<HTMLDivElement>(null);
@@ -35,6 +37,23 @@ function App() {
             renderer.render( scene, camera );
         }
         animate();
+
+        // 辅助线
+        const axesHelper = new THREE.AxesHelper(100);
+        scene.add(axesHelper);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.addEventListener('change', function() {
+            // 重新渲染
+            renderer.render(scene, camera);
+            // 本质是改变相机的参数
+            console.log('camera.position', camera.position);
+        })
+
+        const stats = new Stats();
+        stats.setMode(1);
+        document.body.appendChild(stats.domElement);
+
 
         return () => {
             if (divRef.current) {
