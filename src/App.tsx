@@ -51,7 +51,9 @@ function App() {
         })
 
         const stats = new Stats();
+        //@ts-ignore
         stats.setMode(1);
+        //@ts-ignore
         document.body.appendChild(stats.domElement);
 
 

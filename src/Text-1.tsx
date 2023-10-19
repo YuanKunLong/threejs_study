@@ -10,6 +10,7 @@ function App() {
         if (!divRef.current) return;
 
         const stats = new Stats();
+        //@ts-ignore
         document.body.appendChild(stats.domElement);
 
         // 创建场景
@@ -55,7 +56,9 @@ function App() {
             uniforms: {
                 time: { value: 1.0 }
             },
+            //@ts-ignore
             vertexShader: document.getElementById( 'vertexShader' ).textContent,
+            //@ts-ignore
             fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
             transparent: true,
             side: THREE.DoubleSide
@@ -78,6 +81,7 @@ function App() {
             const object = scene.children[ 0 ];
 
             object.rotation.y = time * 0.0005;
+            //@ts-ignore
             object.material.uniforms.time.value = time * 0.005;
             renderer.render(scene, camera);
             stats.update();

@@ -102,13 +102,14 @@ function App() {
         model.name='小区房子';
         model.add(group1, group2);
         model.position.set(-5,0,-2);
-        model.traverse(function(obj) {
+        model.traverse(function(obj: any) {
             // console.log(obj.name);
             if(obj.isMesh) {
                 obj.material.color.set(0xffff00)
             }
         })
         const nameNode = model.getObjectByName("4号楼");
+        //@ts-ignore
         nameNode.material.color.set(0xff0000)
         // scene.add(model);
 
@@ -140,7 +141,9 @@ function App() {
         })
 
         const stats = new Stats();
+        //@ts-ignore
         stats.setMode(1);
+        //@ts-ignore
         document.body.appendChild(stats.domElement);
 
 

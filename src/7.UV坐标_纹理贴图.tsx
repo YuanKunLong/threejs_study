@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+//@ts-ignore
 import img1 from './assets/a.jpg';
 
 function App() {
@@ -112,7 +113,9 @@ function App() {
         })
 
         const stats = new Stats();
+        //@ts-ignore
         stats.setMode(1);
+        //@ts-ignore
         document.body.appendChild(stats.domElement);
 
 
