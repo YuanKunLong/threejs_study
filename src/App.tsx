@@ -22,8 +22,8 @@ function App() {
         // 设置颜色
         const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
         // 创建网格
-        const cube = new THREE.Mesh( geometry, material );
-        scene.add( cube );
+        const mesh = new THREE.Mesh( geometry, material );
+        scene.add( mesh );
 
         camera.position.z = 5;
 
@@ -31,8 +31,8 @@ function App() {
         function animate() {
             // 每帧执行 60次/每秒
             requestAnimationFrame( animate );
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
+            mesh.rotation.x += 0.01;
+            mesh.rotation.y += 0.01;
 
             renderer.render( scene, camera );
         }
