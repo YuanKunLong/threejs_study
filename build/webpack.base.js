@@ -25,7 +25,7 @@ module.exports = {
                 }
             },
             {
-                test:/.(png|jpg|jpeg|gif|svg)$/, // 匹配图片文件
+                test:/.(png|jpg|jpeg|gif|svg|glb)$/, // 匹配图片文件
                 type: "asset", // type选择asset
                 parser: {
                   dataUrlCondition: {
@@ -45,7 +45,7 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: ['.js', '.tsx', '.ts', '.json'],
+        extensions: ['.js', '.tsx', '.ts', '.json', '.glb'],
         alias: {
             '@src': path.join(__dirname, '../src')
         }
